@@ -1,5 +1,6 @@
 const fs = require('fs');
 const http = require('http');
+const url = require('url');
 
 ////////////////////////////////////////////////
 // FILES
@@ -38,10 +39,25 @@ const http = require('http');
 ////////////////////////////////////////////////
 // SERVER
 
+//Created server that will hold the Hello from server
 const server = http.createServer((req, res) => {
-    res.end('Hello from server!!!');
-});
+    const pathName = req.url;
 
+    if (pathName === '/' || pathName === '\overview') {
+        res.end('This is the OVERVIEW!!!');
+    } else if (pathName === '/product'){
+        res.end('This is the product!!!');
+    } else {
+        res.writeHead(404, {
+            'Content-type': 'text/html',
+            'my-own-header': 'hello-world'
+        });
+        res.end('<h1>Page not found!</h1>');
+    }
+
+    
+});
+//Actually creates the servers address and stores it on the IP address
 server.listen(8000, '127.0.0.1', () => {
     console.log('Listening to requests on port 8000!!!');
 });
