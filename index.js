@@ -72,9 +72,13 @@ const dataObject = JSON.parse(data);
 
 //Created server that will hold the Hello from server
 const server = http.createServer((req, res) => {
-    const pathName = req.url;
+    //creates two variables with separate sets to two different things
+    //query sets the id and pathname sets the /product
+    const { query, pathname } = url.parse(req.url, true);
+
+    // const pathName = req.url;
     //Overview Page
-    if (pathName === '/' || pathName === '/overview') {
+    if (pathname === '/' || pathname === '/overview') {
 
         res.writeHead(200, {'Content-type': 'text/html'});
         //returns an array and replaces each placeholder(el) with a new object(tempcard)
@@ -84,10 +88,17 @@ const server = http.createServer((req, res) => {
         // console.log(product.organic);
         res.end(output);
         //Product Page
-    } else if (pathName === '/product'){
-        res.end('This is the product!!!');
+    } else if (pathname === '/product'){
+        //formats the content to be displayed on the page
+        res.writeHead(200, {'Content-type': 'text/html'});
+        //gets the product at the dataObjects arrays at the position of the query id so if the query id is 2 then it will return the product at the second position
+        const product = dataObject[query.id];
+        const output = replaceTemplate(tempProduct, product)
+
+        
+        res.end(output);
         //API
-    } else if (pathName === '/api') {
+    } else if (pathname === '/api') {
         
         // console.log(productData);
         res.writeHead(200, {'Content-type': 'application/json'});
